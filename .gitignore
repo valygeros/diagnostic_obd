@@ -29,3 +29,6 @@ coverage
 # Raw ELM/vehicle logs: may contain VINs. Only anonymised fixtures go in src/**/fixtures.
 logs-raw/
 *.rawlog.txt
+
+# Downloaded OBDex sources (re-fetch with npm run db:fetch)
+data/dtc/source/*.yaml
