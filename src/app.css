@@ -1,0 +1,227 @@
+/*
+ * Design tokens — "atelier" look: workshop instrument, high contrast for sunlight,
+ * big touch targets, severity always shown as colour + word (CLAUDE.md §7.3, §13).
+ */
+
+/* ---------- Light theme (default) ---------- */
+:root {
+  color-scheme: light;
+
+  /* Ground and ink */
+  --bg: #f1efe9;
+  --bg-grid: rgb(20 20 18 / 0.05);
+  --surface: #ffffff;
+  --surface-2: #e7e4dc;
+  --ink: #121210;
+  --ink-2: #45433d;
+  --ink-3: #6d6a62;
+  --line: #121210;
+  --line-soft: #c9c5ba;
+
+  /* Accent: signal yellow, as on workshop equipment */
+  --accent: #ffcc00;
+  --accent-ink: #121210;
+  --focus: #0057d9;
+
+  /* Severity (fill / ink on fill / text on surface) */
+  --sev-stop: #d41f1f;
+  --sev-stop-ink: #ffffff;
+  --sev-stop-text: #b0141a;
+  --sev-soon: #ff7a00;
+  --sev-soon-ink: #121210;
+  --sev-soon-text: #a84b00;
+  --sev-monitor: #f2c200;
+  --sev-monitor-ink: #121210;
+  --sev-monitor-text: #7a5f00;
+  --sev-info: #d6d3cb;
+  --sev-info-ink: #121210;
+  --sev-info-text: #45433d;
+  --ok: #1a8a3a;
+  --ok-ink: #ffffff;
+  --ok-text: #136b2c;
+
+  /* Typography */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif-condensed, sans-serif;
+  --font-body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.375rem;
+  --fs-xl: 2rem;
+  --fs-xxl: 2.75rem;
+
+  /* Spacing, shape */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --radius: 4px;
+  --border: 2px;
+  --touch: 48px;
+  --shadow-hard: 4px 4px 0 var(--line);
+
+  --gutter: max(1rem, env(safe-area-inset-left, 0px));
+}
+
+/* ---------- Dark theme ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0f0f0d;
+    --bg-grid: rgb(255 255 255 / 0.04);
+    --surface: #1b1b18;
+    --surface-2: #26261f;
+    --ink: #f4f1e8;
+    --ink-2: #c6c2b6;
+    --ink-3: #8f8b80;
+    --line: #f4f1e8;
+    --line-soft: #3d3c35;
+    --accent: #ffd21a;
+    --accent-ink: #0f0f0d;
+    --focus: #6aa8ff;
+    --sev-stop: #ff3b30;
+    --sev-stop-ink: #0f0f0d;
+    --sev-stop-text: #ff6b62;
+    --sev-soon: #ff8f1f;
+    --sev-soon-ink: #0f0f0d;
+    --sev-soon-text: #ffa04a;
+    --sev-monitor: #ffd21a;
+    --sev-monitor-ink: #0f0f0d;
+    --sev-monitor-text: #ffd84a;
+    --sev-info: #3d3c35;
+    --sev-info-ink: #f4f1e8;
+    --sev-info-text: #c6c2b6;
+    --ok: #34c759;
+    --ok-ink: #0f0f0d;
+    --ok-text: #5fd97c;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f0f0d;
+  --bg-grid: rgb(255 255 255 / 0.04);
+  --surface: #1b1b18;
+  --surface-2: #26261f;
+  --ink: #f4f1e8;
+  --ink-2: #c6c2b6;
+  --ink-3: #8f8b80;
+  --line: #f4f1e8;
+  --line-soft: #3d3c35;
+  --accent: #ffd21a;
+  --accent-ink: #0f0f0d;
+  --focus: #6aa8ff;
+  --sev-stop: #ff3b30;
+  --sev-stop-ink: #0f0f0d;
+  --sev-stop-text: #ff6b62;
+  --sev-soon: #ff8f1f;
+  --sev-soon-ink: #0f0f0d;
+  --sev-soon-text: #ffa04a;
+  --sev-monitor: #ffd21a;
+  --sev-monitor-ink: #0f0f0d;
+  --sev-monitor-text: #ffd84a;
+  --sev-info: #3d3c35;
+  --sev-info-ink: #f4f1e8;
+  --sev-info-text: #c6c2b6;
+  --ok: #34c759;
+  --ok-ink: #0f0f0d;
+  --ok-text: #5fd97c;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: var(--bg);
+  /* Faint millimetre grid, like a workshop mat */
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--fs-xxl);
+  text-transform: uppercase;
+}
+h2 {
+  font-size: var(--fs-xl);
+  text-transform: uppercase;
+}
+h3 {
+  font-size: var(--fs-lg);
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
