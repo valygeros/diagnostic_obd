@@ -174,3 +174,17 @@ describe('timeouts', () => {
     expect(msgs[0]?.data.slice(0, 2)).toEqual([0x41, 0x0d])
   })
 })
+
+describe('realistic timings', () => {
+  it('only the OBD request pays the protocol-search delay, not ATI/STI', async () => {
+    const scenario = scenarioById('no-vehicle')
+    if (!scenario) throw new Error('no-vehicle')
+    const transport = new MockTransport(new SimulatedElm(scenario), { latencyMs: 5 })
+    await transport.connect()
+    // Default client timeouts: STI must not wait for the 2.5 s search.
+    const elm = new Elm327(transport)
+    await expect(elm.initAdapter()).resolves.toMatchObject({ id: 'ELM327 v1.5' })
+    const err = await elm.connectVehicle().catch((e: unknown) => e)
+    expect((err as ElmError).code).toBe('UNABLE_TO_CONNECT')
+  }, 10_000)
+})

@@ -1,0 +1,641 @@
+{
+  "_about": "Fiches rédigées à la main pour les codes les plus fréquents. Elles remplacent les champs OBDex correspondants. Rédaction : projet (relecture humaine bienvenue).",
+  "codes": {
+    "P0300": {
+      "title": "Ratés d'allumage aléatoires ou sur plusieurs cylindres",
+      "description": "Le calculateur détecte des combustions ratées sur plusieurs cylindres ou de façon aléatoire. Comme plusieurs cylindres sont touchés, la cause est souvent commune à tout le moteur (carburant, air, allumage général) plutôt qu'une pièce d'un seul cylindre.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Bougies d'allumage usées (entretien dépassé)", "likelihood": "high" },
+        { "text": "Prise d'air (durite, joint de collecteur)", "likelihood": "high" },
+        { "text": "Pression de carburant trop faible (pompe, filtre)", "likelihood": "medium" },
+        { "text": "Débitmètre d'air encrassé", "likelihood": "medium" },
+        { "text": "Problème mécanique (compression, distribution)", "likelihood": "low" }
+      ],
+      "checks": [
+        "Si le voyant moteur clignote : roule le moins possible, le catalyseur peut être détruit par le carburant imbrûlé.",
+        "Vérifie la date du dernier changement de bougies.",
+        "Regarde les corrections de richesse (court et long terme) : au-delà de +10 %, cherche une prise d'air ou un manque de carburant.",
+        "Écoute moteur tournant s'il y a un sifflement côté admission."
+      ]
+    },
+    "P0301": {
+      "title": "Raté d'allumage détecté — cylindre 1",
+      "description": "Des combustions ratées sont concentrées sur le cylindre 1. Un code limité à un cylindre oriente vers une pièce propre à ce cylindre : bobine, bougie, injecteur ou compression.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Bobine d'allumage du cylindre 1 défectueuse", "likelihood": "high" },
+        { "text": "Bougie du cylindre 1 usée ou encrassée", "likelihood": "high" },
+        { "text": "Injecteur du cylindre 1 encrassé", "likelihood": "medium" },
+        { "text": "Compression faible sur le cylindre 1", "likelihood": "low" }
+      ],
+      "checks": [
+        "Inverse la bobine du cylindre 1 avec celle d'un autre cylindre, efface le code et roule : si le raté change de cylindre, c'est la bobine.",
+        "Fais de même avec la bougie.",
+        "Si le voyant moteur clignote, évite de rouler (risque pour le catalyseur)."
+      ]
+    },
+    "P0302": {
+      "title": "Raté d'allumage détecté — cylindre 2",
+      "description": "Des combustions ratées sont concentrées sur le cylindre 2. Même démarche que pour P0301 : bobine, bougie, injecteur ou compression de ce cylindre.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Bobine d'allumage du cylindre 2 défectueuse", "likelihood": "high" },
+        { "text": "Bougie du cylindre 2 usée ou encrassée", "likelihood": "high" },
+        { "text": "Injecteur du cylindre 2 encrassé", "likelihood": "medium" },
+        { "text": "Compression faible sur le cylindre 2", "likelihood": "low" }
+      ],
+      "checks": [
+        "Inverse la bobine avec un autre cylindre et regarde si le raté suit.",
+        "Fais de même avec la bougie.",
+        "Si le voyant moteur clignote, évite de rouler."
+      ]
+    },
+    "P0303": {
+      "title": "Raté d'allumage détecté — cylindre 3",
+      "description": "Des combustions ratées sont concentrées sur le cylindre 3. Bobine, bougie, injecteur ou compression de ce cylindre.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Bobine d'allumage du cylindre 3 défectueuse", "likelihood": "high" },
+        { "text": "Bougie du cylindre 3 usée ou encrassée", "likelihood": "high" },
+        { "text": "Injecteur du cylindre 3 encrassé", "likelihood": "medium" },
+        { "text": "Compression faible sur le cylindre 3", "likelihood": "low" }
+      ],
+      "checks": [
+        "Inverse la bobine avec un autre cylindre et regarde si le raté suit.",
+        "Fais de même avec la bougie.",
+        "Si le voyant moteur clignote, évite de rouler."
+      ]
+    },
+    "P0304": {
+      "title": "Raté d'allumage détecté — cylindre 4",
+      "description": "Des combustions ratées sont concentrées sur le cylindre 4. Bobine, bougie, injecteur ou compression de ce cylindre.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Bobine d'allumage du cylindre 4 défectueuse", "likelihood": "high" },
+        { "text": "Bougie du cylindre 4 usée ou encrassée", "likelihood": "high" },
+        { "text": "Injecteur du cylindre 4 encrassé", "likelihood": "medium" },
+        { "text": "Compression faible sur le cylindre 4", "likelihood": "low" }
+      ],
+      "checks": [
+        "Inverse la bobine avec un autre cylindre et regarde si le raté suit.",
+        "Fais de même avec la bougie.",
+        "Si le voyant moteur clignote, évite de rouler."
+      ]
+    },
+    "P0171": {
+      "title": "Mélange trop pauvre — banc 1",
+      "description": "Le calculateur doit ajouter beaucoup de carburant pour atteindre le bon mélange : il y a trop d'air ou pas assez d'essence. Sur un moteur 4 cylindres en ligne, « banc 1 » désigne tout le moteur.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Prise d'air après le débitmètre (durite fendue, joint d'admission, réaspiration des vapeurs)", "likelihood": "high" },
+        { "text": "Débitmètre d'air encrassé qui sous-estime l'air", "likelihood": "medium" },
+        { "text": "Pression de carburant faible (pompe, filtre, régulateur)", "likelihood": "medium" },
+        { "text": "Injecteurs encrassés", "likelihood": "low" }
+      ],
+      "checks": [
+        "Regarde la correction de richesse long terme : au-delà de +10 %, le défaut est réel.",
+        "Si la correction diminue quand tu montes en régime, c'est typiquement une prise d'air.",
+        "Inspecte les durites d'admission et écoute s'il y a un sifflement au ralenti."
+      ]
+    },
+    "P0172": {
+      "title": "Mélange trop riche — banc 1",
+      "description": "Le calculateur doit retirer beaucoup de carburant : il y en a trop par rapport à l'air mesuré.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Injecteur qui fuit", "likelihood": "medium" },
+        { "text": "Pression de carburant trop élevée (régulateur)", "likelihood": "medium" },
+        { "text": "Débitmètre d'air qui surestime l'air", "likelihood": "medium" },
+        { "text": "Filtre à air très colmaté", "likelihood": "low" },
+        { "text": "Canister (vapeurs de carburant) saturé", "likelihood": "low" }
+      ],
+      "checks": [
+        "Regarde la correction de richesse long terme : en dessous de −10 %, le défaut est réel.",
+        "Contrôle l'état du filtre à air.",
+        "Une odeur d'essence ou une fumée noire confirment l'excès de carburant."
+      ]
+    },
+    "P0174": {
+      "title": "Mélange trop pauvre — banc 2",
+      "description": "Comme P0171, mais sur le deuxième banc de cylindres (moteurs en V). Si P0171 et P0174 sont présents ensemble, la cause est commune aux deux bancs (prise d'air générale, carburant, débitmètre).",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Prise d'air côté banc 2 ou commune", "likelihood": "high" },
+        { "text": "Débitmètre d'air encrassé", "likelihood": "medium" },
+        { "text": "Pression de carburant faible", "likelihood": "medium" }
+      ],
+      "checks": [
+        "Compare les corrections de richesse des deux bancs.",
+        "Si les deux bancs sont pauvres, regarde d'abord le débitmètre et la pression d'essence."
+      ]
+    },
+    "P0175": {
+      "title": "Mélange trop riche — banc 2",
+      "description": "Comme P0172, mais sur le deuxième banc de cylindres (moteurs en V).",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Injecteur qui fuit côté banc 2", "likelihood": "medium" },
+        { "text": "Pression de carburant trop élevée", "likelihood": "medium" },
+        { "text": "Débitmètre d'air qui surestime l'air", "likelihood": "medium" }
+      ],
+      "checks": ["Compare les corrections de richesse des deux bancs."]
+    },
+    "P0420": {
+      "title": "Efficacité du catalyseur sous le seuil — banc 1",
+      "description": "La sonde lambda placée après le catalyseur montre que celui-ci ne nettoie plus assez les gaz. Le moteur n'est pas en danger, mais la voiture peut échouer au contrôle technique.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Catalyseur usé ou endommagé (souvent après des ratés d'allumage)", "likelihood": "high" },
+        { "text": "Sonde lambda aval vieillissante", "likelihood": "medium" },
+        { "text": "Fuite d'échappement avant la sonde aval", "likelihood": "medium" },
+        { "text": "Défaut moteur qui encrasse le catalyseur (huile, mélange riche)", "likelihood": "low" }
+      ],
+      "checks": [
+        "Traite d'abord tout autre code moteur (ratés, richesse) : ils peuvent causer celui-ci.",
+        "Avec les données en direct, la sonde aval doit rester assez stable ; si elle oscille comme la sonde amont, le catalyseur ne fait plus son travail.",
+        "Recherche une fuite d'échappement (bruit, traces de suie)."
+      ]
+    },
+    "P0430": {
+      "title": "Efficacité du catalyseur sous le seuil — banc 2",
+      "description": "Comme P0420, pour le catalyseur du deuxième banc (moteurs en V).",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Catalyseur du banc 2 usé", "likelihood": "high" },
+        { "text": "Sonde lambda aval du banc 2 vieillissante", "likelihood": "medium" },
+        { "text": "Fuite d'échappement", "likelihood": "medium" }
+      ],
+      "checks": ["Traite d'abord les autres codes moteur.", "Compare le comportement des sondes aval des deux bancs."]
+    },
+    "P0440": {
+      "title": "Système de récupération des vapeurs de carburant (EVAP) : dysfonctionnement",
+      "description": "Le circuit qui récupère les vapeurs d'essence du réservoir (canister, vannes, durites) ne fonctionne pas correctement. Sans danger pour le moteur.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Bouchon de réservoir mal fermé ou joint abîmé", "likelihood": "high" },
+        { "text": "Durite EVAP fendue ou débranchée", "likelihood": "medium" },
+        { "text": "Électrovanne de purge du canister défectueuse", "likelihood": "medium" }
+      ],
+      "checks": ["Vérifie le bouchon de réservoir (clic de fermeture, joint).", "Efface le code et observe s'il revient après quelques trajets."]
+    },
+    "P0442": {
+      "title": "Petite fuite détectée sur le système EVAP",
+      "description": "Le test d'étanchéité du circuit des vapeurs d'essence a détecté une petite fuite. Sans danger pour le moteur, mais peut faire échouer le contrôle antipollution.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Bouchon de réservoir mal serré ou joint usé", "likelihood": "high" },
+        { "text": "Durite EVAP fendue (petite fissure)", "likelihood": "medium" },
+        { "text": "Électrovanne de purge ou de mise à l'air qui ne ferme pas bien", "likelihood": "medium" }
+      ],
+      "checks": ["Commence par le bouchon de réservoir : c'est la cause la plus fréquente et la moins chère.", "Un test à la fumée en garage localise les petites fuites."]
+    },
+    "P0455": {
+      "title": "Grosse fuite détectée sur le système EVAP",
+      "description": "Le circuit des vapeurs d'essence n'arrive pas à se mettre en dépression : il y a une fuite importante.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Bouchon de réservoir absent ou mal fermé", "likelihood": "high" },
+        { "text": "Durite EVAP débranchée", "likelihood": "medium" },
+        { "text": "Électrovanne de mise à l'air bloquée ouverte", "likelihood": "medium" }
+      ],
+      "checks": ["Vérifie le bouchon de réservoir.", "Inspecte les durites autour du canister et du réservoir."]
+    },
+    "P0456": {
+      "title": "Très petite fuite détectée sur le système EVAP",
+      "description": "Une très petite fuite a été détectée sur le circuit des vapeurs d'essence.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Joint du bouchon de réservoir usé", "likelihood": "high" },
+        { "text": "Micro-fissure d'une durite EVAP", "likelihood": "medium" }
+      ],
+      "checks": ["Remplacer le bouchon de réservoir règle souvent ce code."]
+    },
+    "P0128": {
+      "title": "Température du liquide de refroidissement sous la température de régulation du thermostat",
+      "description": "Le moteur met trop longtemps à chauffer ou n'atteint pas sa température normale. Le plus souvent, le thermostat reste ouvert.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Thermostat bloqué ouvert", "likelihood": "high" },
+        { "text": "Capteur de température de liquide de refroidissement défaillant", "likelihood": "medium" },
+        { "text": "Niveau de liquide de refroidissement bas", "likelihood": "low" }
+      ],
+      "checks": [
+        "Avec les données en direct, la température doit atteindre environ 85–95 °C après 10–15 minutes de route.",
+        "Si elle stagne vers 60–75 °C (surtout par temps froid), le thermostat est le suspect n°1.",
+        "Chauffage peu efficace et consommation en hausse sont des signes typiques."
+      ]
+    },
+    "P0101": {
+      "title": "Débitmètre d'air : plage ou performance incorrecte",
+      "description": "La quantité d'air mesurée par le débitmètre ne correspond pas à ce que le calculateur attend pour ce régime et cette charge.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Débitmètre encrassé (huile de filtre à air, poussière)", "likelihood": "high" },
+        { "text": "Prise d'air entre le débitmètre et le moteur", "likelihood": "medium" },
+        { "text": "Filtre à air colmaté", "likelihood": "medium" },
+        { "text": "Débitmètre défectueux", "likelihood": "medium" }
+      ],
+      "checks": [
+        "Au ralenti moteur chaud, un moteur de 1,6 L mesure environ 2 à 4 g/s.",
+        "Vérifie le filtre à air et les durites entre le débitmètre et le papillon.",
+        "Un nettoyant spécial débitmètre peut suffire (ne jamais toucher l'élément sensible)."
+      ]
+    },
+    "P0102": {
+      "title": "Débitmètre d'air : signal trop bas",
+      "description": "Le signal du débitmètre d'air est trop faible, souvent à cause d'un problème électrique.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Connecteur du débitmètre débranché ou oxydé", "likelihood": "high" },
+        { "text": "Fil coupé ou alimentation absente", "likelihood": "medium" },
+        { "text": "Débitmètre défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Contrôle le connecteur du débitmètre.", "Regarde la valeur en direct : 0 g/s moteur tournant confirme un défaut électrique."]
+    },
+    "P0113": {
+      "title": "Capteur de température d'air d'admission : signal haut",
+      "description": "Le capteur de température d'air d'admission envoie un signal anormalement haut, ce qui correspond le plus souvent à un circuit ouvert (fil coupé ou capteur débranché).",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Connecteur débranché ou oxydé", "likelihood": "high" },
+        { "text": "Fil coupé", "likelihood": "medium" },
+        { "text": "Capteur défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["En direct, une température d'air de −40 °C indique un circuit ouvert."]
+    },
+    "P0118": {
+      "title": "Capteur de température du liquide de refroidissement : signal haut",
+      "description": "Le capteur de température moteur envoie un signal anormalement haut, en général un circuit ouvert. Le calculateur prend alors une valeur de secours et peut faire tourner le ventilateur en permanence.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Connecteur du capteur débranché ou oxydé", "likelihood": "high" },
+        { "text": "Fil coupé", "likelihood": "medium" },
+        { "text": "Capteur défectueux", "likelihood": "medium" }
+      ],
+      "checks": [
+        "En direct, une température de −40 °C moteur chaud indique un circuit ouvert.",
+        "Surveille la jauge de température du tableau de bord : sans information fiable, une surchauffe peut passer inaperçue."
+      ]
+    },
+    "P0115": {
+      "title": "Capteur de température du liquide de refroidissement : circuit",
+      "description": "Défaut sur le circuit du capteur de température moteur.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "high" },
+        { "text": "Capteur défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Compare la température affichée en direct avec la température réelle (moteur froid = température ambiante)."]
+    },
+    "P0117": {
+      "title": "Capteur de température du liquide de refroidissement : signal bas",
+      "description": "Le capteur de température moteur envoie un signal anormalement bas, en général un court-circuit à la masse.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Fil de signal en court-circuit à la masse", "likelihood": "medium" },
+        { "text": "Capteur défectueux (court-circuit interne)", "likelihood": "medium" }
+      ],
+      "checks": ["En direct, une température très élevée (plus de 130 °C) moteur froid indique ce défaut."]
+    },
+    "P0217": {
+      "title": "Surchauffe moteur",
+      "description": "Le moteur a dépassé sa température maximale. Continuer à rouler peut endommager gravement le moteur (joint de culasse, culasse déformée).",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Niveau de liquide de refroidissement bas (fuite)", "likelihood": "high" },
+        { "text": "Ventilateur de refroidissement qui ne démarre pas", "likelihood": "medium" },
+        { "text": "Thermostat bloqué fermé", "likelihood": "medium" },
+        { "text": "Pompe à eau défectueuse", "likelihood": "medium" },
+        { "text": "Joint de culasse défectueux", "likelihood": "low" }
+      ],
+      "checks": [
+        "Arrête-toi et coupe le moteur. N'ouvre jamais le bocal de liquide de refroidissement moteur chaud.",
+        "Une fois refroidi, contrôle le niveau et cherche des fuites.",
+        "Vérifie que le ventilateur se met en route moteur chaud."
+      ]
+    },
+    "P0133": {
+      "title": "Sonde lambda amont : réponse lente (banc 1, sonde 1)",
+      "description": "La sonde lambda placée avant le catalyseur réagit trop lentement aux changements de mélange. Elle vieillit ou est encrassée.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Sonde lambda vieillissante ou encrassée", "likelihood": "high" },
+        { "text": "Fuite d'échappement avant la sonde", "likelihood": "medium" },
+        { "text": "Prise d'air à l'admission", "likelihood": "low" }
+      ],
+      "checks": ["En direct, une sonde amont en bon état oscille rapidement (plusieurs fois par seconde) entre 0,1 et 0,9 V moteur chaud à 2 000 tr/min."]
+    },
+    "P0135": {
+      "title": "Sonde lambda amont : défaut du circuit de chauffage (banc 1, sonde 1)",
+      "description": "L'élément chauffant de la sonde lambda avant le catalyseur ne fonctionne pas. La sonde met alors plus de temps à fonctionner après un démarrage à froid.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Élément chauffant de la sonde coupé", "likelihood": "high" },
+        { "text": "Fusible du chauffage de sonde grillé", "likelihood": "medium" },
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Vérifie le fusible de chauffage des sondes lambda.", "Le remplacement de la sonde règle le problème dans la plupart des cas."]
+    },
+    "P0141": {
+      "title": "Sonde lambda aval : défaut du circuit de chauffage (banc 1, sonde 2)",
+      "description": "L'élément chauffant de la sonde lambda placée après le catalyseur ne fonctionne pas.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Élément chauffant de la sonde coupé", "likelihood": "high" },
+        { "text": "Fusible grillé", "likelihood": "medium" },
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Vérifie le fusible de chauffage des sondes lambda."]
+    },
+    "P0401": {
+      "title": "Recirculation des gaz d'échappement (EGR) : débit insuffisant",
+      "description": "Le calculateur demande à la vanne EGR de renvoyer des gaz d'échappement à l'admission, mais ne constate pas l'effet attendu. Très fréquent sur les diesels encrassés.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Vanne EGR encrassée par la calamine", "likelihood": "high" },
+        { "text": "Conduits EGR bouchés", "likelihood": "medium" },
+        { "text": "Vanne EGR défectueuse", "likelihood": "medium" },
+        { "text": "Capteur de pression ou de position EGR défaillant", "likelihood": "low" }
+      ],
+      "checks": [
+        "Un nettoyage de la vanne et des conduits suffit souvent.",
+        "Des trajets réguliers sur voie rapide limitent l'encrassement."
+      ]
+    },
+    "P0402": {
+      "title": "Recirculation des gaz d'échappement (EGR) : débit excessif",
+      "description": "Trop de gaz d'échappement retournent à l'admission, souvent parce que la vanne EGR reste ouverte.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Vanne EGR bloquée ouverte (calamine)", "likelihood": "high" },
+        { "text": "Vanne EGR défectueuse", "likelihood": "medium" }
+      ],
+      "checks": ["Un ralenti instable ou un calage au ralenti sont des signes typiques."]
+    },
+    "P0500": {
+      "title": "Capteur de vitesse du véhicule : dysfonctionnement",
+      "description": "Le calculateur ne reçoit pas une vitesse cohérente. Selon la voiture, la vitesse vient d'un capteur de boîte ou des capteurs de roue (ABS).",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Capteur de vitesse défectueux", "likelihood": "medium" },
+        { "text": "Câblage ou connecteur défectueux", "likelihood": "medium" },
+        { "text": "Défaut ABS (si la vitesse vient des roues)", "likelihood": "medium" }
+      ],
+      "checks": ["Compare la vitesse en direct avec le compteur en roulant.", "Lis aussi les défauts du calculateur ABS si possible."]
+    },
+    "P0505": {
+      "title": "Système de régulation du ralenti : dysfonctionnement",
+      "description": "Le calculateur n'arrive pas à maintenir le régime de ralenti voulu.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Boîtier papillon encrassé", "likelihood": "high" },
+        { "text": "Prise d'air", "likelihood": "medium" },
+        { "text": "Moteur de régulation du ralenti défectueux (moteurs anciens)", "likelihood": "medium" }
+      ],
+      "checks": ["Un nettoyage du boîtier papillon est souvent efficace (suivre la procédure du constructeur ; un réapprentissage peut être nécessaire)."]
+    },
+    "P0506": {
+      "title": "Régime de ralenti plus bas que prévu",
+      "description": "Le régime de ralenti est inférieur à la consigne du calculateur.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Boîtier papillon encrassé", "likelihood": "high" },
+        { "text": "Admission partiellement obstruée", "likelihood": "low" }
+      ],
+      "checks": ["Compare en direct le régime de ralenti moteur chaud avec la valeur habituelle (en général 650–850 tr/min)."]
+    },
+    "P0507": {
+      "title": "Régime de ralenti plus haut que prévu",
+      "description": "Le régime de ralenti est supérieur à la consigne du calculateur, souvent à cause d'une entrée d'air non mesurée.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Prise d'air", "likelihood": "high" },
+        { "text": "Boîtier papillon encrassé ou mal réappris", "likelihood": "medium" }
+      ],
+      "checks": ["Écoute s'il y a un sifflement au ralenti.", "Regarde la correction de richesse : positive au ralenti, elle confirme une prise d'air."]
+    },
+    "P0562": {
+      "title": "Tension du système trop basse",
+      "description": "Le calculateur mesure une tension d'alimentation trop basse. Batterie faible, alternateur qui charge mal ou mauvais contact.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Batterie usée ou déchargée", "likelihood": "high" },
+        { "text": "Alternateur qui ne charge plus assez", "likelihood": "medium" },
+        { "text": "Cosse de batterie desserrée ou oxydée", "likelihood": "medium" },
+        { "text": "Courroie d'accessoires qui patine", "likelihood": "low" }
+      ],
+      "checks": [
+        "Tension mesurée par le dongle moteur tournant : elle doit être entre 13,5 et 14,7 V.",
+        "Moteur coupé depuis quelques heures : une batterie saine affiche 12,4 V ou plus.",
+        "Nettoie et resserre les cosses de batterie."
+      ]
+    },
+    "P0563": {
+      "title": "Tension du système trop haute",
+      "description": "Le calculateur mesure une tension d'alimentation trop élevée, en général un régulateur d'alternateur défaillant.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Régulateur de l'alternateur défectueux", "likelihood": "high" },
+        { "text": "Mauvaise masse", "likelihood": "low" }
+      ],
+      "checks": ["Moteur tournant, une tension au-dessus de 15 V confirme une surcharge : à faire réparer vite (risque pour la batterie et l'électronique)."]
+    },
+    "P0700": {
+      "title": "Défaut du système de commande de la boîte de vitesses",
+      "description": "Le calculateur de boîte automatique a enregistré un défaut et demande l'allumage du voyant. Ce code ne dit pas lequel : il faut lire les codes du calculateur de boîte.",
+      "urgency": "soon",
+      "causes": [{ "text": "Voir les codes enregistrés dans le calculateur de boîte", "likelihood": "high" }],
+      "checks": ["Lis les défauts du calculateur de boîte (souvent l'ECU 7E9 en CAN).", "Contrôle le niveau et l'état de l'huile de boîte si c'est possible sur ton modèle."]
+    },
+    "P0715": {
+      "title": "Capteur de vitesse d'entrée/turbine de boîte : circuit",
+      "description": "Le calculateur de boîte ne reçoit pas un signal correct du capteur de vitesse d'entrée (turbine). Les passages de rapports peuvent devenir brutaux, ou la boîte peut se bloquer sur un rapport.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Capteur de vitesse d'entrée défectueux", "likelihood": "medium" },
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "medium" },
+        { "text": "Huile de boîte très usée ou niveau incorrect", "likelihood": "low" }
+      ],
+      "checks": ["Contrôle les connecteurs de la boîte.", "Fais vérifier le niveau d'huile de boîte."]
+    },
+    "P0011": {
+      "title": "Calage de l'arbre à cames d'admission trop avancé (banc 1)",
+      "description": "Le déphaseur de l'arbre à cames d'admission n'atteint pas la position demandée. Souvent lié à l'huile moteur (niveau, qualité) ou à l'électrovanne de déphasage.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Niveau d'huile bas ou huile inadaptée/usée", "likelihood": "high" },
+        { "text": "Électrovanne de déphasage encrassée ou défectueuse", "likelihood": "medium" },
+        { "text": "Déphaseur d'arbre à cames usé", "likelihood": "medium" },
+        { "text": "Chaîne de distribution détendue", "likelihood": "low" }
+      ],
+      "checks": ["Contrôle le niveau d'huile et la date de la dernière vidange.", "Un bruit de cliquetis au démarrage peut indiquer un déphaseur ou une chaîne usés."]
+    },
+    "P0016": {
+      "title": "Incohérence entre la position du vilebrequin et de l'arbre à cames (banc 1, capteur A)",
+      "description": "Les positions du vilebrequin et de l'arbre à cames ne sont pas synchronisées comme prévu. Cela peut venir d'un capteur, mais aussi d'une distribution décalée : à prendre au sérieux.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Chaîne ou courroie de distribution détendue ou décalée", "likelihood": "medium" },
+        { "text": "Déphaseur d'arbre à cames défectueux", "likelihood": "medium" },
+        { "text": "Capteur de position d'arbre à cames ou de vilebrequin défaillant", "likelihood": "medium" },
+        { "text": "Huile moteur inadaptée ou niveau bas", "likelihood": "low" }
+      ],
+      "checks": ["Ne pousse pas le moteur tant que ce n'est pas diagnostiqué : une distribution qui saute peut casser le moteur.", "Un bruit de chaîne au démarrage est un indice fort."]
+    },
+    "P0335": {
+      "title": "Capteur de position du vilebrequin : circuit",
+      "description": "Le calculateur ne reçoit pas de signal correct du capteur de vilebrequin. Sans ce signal, le moteur peut caler ou ne pas démarrer.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Capteur de vilebrequin défectueux", "likelihood": "high" },
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "medium" },
+        { "text": "Cible du capteur (couronne) endommagée", "likelihood": "low" }
+      ],
+      "checks": ["Si le moteur cale ou ne démarre plus, c'est la cause probable.", "Contrôle le connecteur du capteur."]
+    },
+    "P0340": {
+      "title": "Capteur de position d'arbre à cames : circuit (banc 1, capteur A)",
+      "description": "Le calculateur ne reçoit pas de signal correct du capteur d'arbre à cames. Démarrages plus longs, voire impossibles.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Capteur d'arbre à cames défectueux", "likelihood": "high" },
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "medium" },
+        { "text": "Distribution décalée", "likelihood": "low" }
+      ],
+      "checks": ["Contrôle le connecteur du capteur.", "Si d'autres codes de calage sont présents, pense à la distribution."]
+    },
+    "P0325": {
+      "title": "Capteur de cliquetis : circuit (banc 1)",
+      "description": "Le circuit du capteur de cliquetis est défectueux. Par précaution, le calculateur retarde l'allumage : perte de puissance et surconsommation possibles.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Connecteur ou câblage défectueux", "likelihood": "high" },
+        { "text": "Capteur de cliquetis défectueux", "likelihood": "medium" },
+        { "text": "Capteur mal serré", "likelihood": "low" }
+      ],
+      "checks": ["Contrôle le connecteur et le serrage du capteur (couple constructeur)."]
+    },
+    "P0087": {
+      "title": "Pression de rampe d'injection trop basse",
+      "description": "La pression de carburant dans la rampe est inférieure à la consigne. Perte de puissance, calages, démarrage difficile. Fréquent sur les diesels à rampe commune.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Filtre à carburant colmaté", "likelihood": "high" },
+        { "text": "Pompe de gavage ou pompe haute pression faible", "likelihood": "medium" },
+        { "text": "Prise d'air sur le circuit de carburant (diesel)", "likelihood": "medium" },
+        { "text": "Régulateur ou capteur de pression défaillant", "likelihood": "medium" },
+        { "text": "Injecteur avec trop de fuite de retour (diesel)", "likelihood": "low" }
+      ],
+      "checks": ["Commence par le filtre à carburant si son remplacement date.", "Compare en direct la pression réelle et la consigne en accélérant."]
+    },
+    "P0299": {
+      "title": "Turbo : pression de suralimentation insuffisante",
+      "description": "Le turbo ne fournit pas la pression demandée. Perte de puissance, parfois mode dégradé.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Fuite sur le circuit d'air (durite de turbo fendue, collier desserré, échangeur percé)", "likelihood": "high" },
+        { "text": "Géométrie variable ou wastegate grippée", "likelihood": "medium" },
+        { "text": "Électrovanne de commande du turbo ou durite de dépression défectueuse", "likelihood": "medium" },
+        { "text": "Turbo usé", "likelihood": "low" }
+      ],
+      "checks": ["Inspecte les durites entre turbo, échangeur et admission (traces d'huile, fissures).", "Un sifflement à l'accélération oriente vers une fuite d'air."]
+    },
+    "P0234": {
+      "title": "Turbo : surpression de suralimentation",
+      "description": "La pression de suralimentation dépasse la limite. Le calculateur passe souvent en mode dégradé pour protéger le moteur.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Géométrie variable ou wastegate bloquée", "likelihood": "high" },
+        { "text": "Électrovanne de commande du turbo défectueuse", "likelihood": "medium" },
+        { "text": "Capteur de pression de suralimentation défaillant", "likelihood": "medium" }
+      ],
+      "checks": ["Évite les fortes accélérations tant que ce n'est pas réparé."]
+    },
+    "P0380": {
+      "title": "Bougies de préchauffage : circuit A",
+      "description": "Défaut sur le circuit des bougies de préchauffage d'un diesel. Démarrages à froid difficiles, fumée blanche au démarrage.",
+      "urgency": "monitor",
+      "causes": [
+        { "text": "Une ou plusieurs bougies de préchauffage grillées", "likelihood": "high" },
+        { "text": "Boîtier de préchauffage défectueux", "likelihood": "medium" },
+        { "text": "Câblage ou connecteur défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Les bougies se contrôlent une par une à l'ohmmètre (attention, elles cassent facilement au démontage)."]
+    },
+    "P2002": {
+      "title": "Filtre à particules (FAP) : efficacité sous le seuil (banc 1)",
+      "description": "Le calculateur estime que le filtre à particules ne retient plus correctement les suies (fissuré, percé ou retiré).",
+      "urgency": "soon",
+      "causes": [
+        { "text": "FAP fissuré ou endommagé", "likelihood": "medium" },
+        { "text": "Capteur de pression différentielle du FAP défaillant ou durites inversées/fendues", "likelihood": "high" }
+      ],
+      "checks": ["Vérifie d'abord le capteur de pression différentielle et ses durites (fréquent et peu coûteux)."]
+    },
+    "P2463": {
+      "title": "Filtre à particules (FAP) : accumulation de suie",
+      "description": "Le filtre à particules est trop chargé en suie. Si rien n'est fait, la voiture peut passer en mode dégradé, et un filtre trop chargé ne peut plus être régénéré sans risque.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Trajets trop courts : la régénération n'a pas pu se faire", "likelihood": "high" },
+        { "text": "Défaut moteur produisant trop de suie (injecteurs, EGR, turbo)", "likelihood": "medium" },
+        { "text": "Capteur de pression différentielle défaillant", "likelihood": "medium" },
+        { "text": "Additif FAP épuisé (selon les modèles)", "likelihood": "low" }
+      ],
+      "checks": [
+        "Si la voiture le permet encore, un trajet de 20–30 minutes à régime soutenu (voie rapide) peut déclencher une régénération.",
+        "Traite les autres codes moteur avant : ils sont souvent la cause de l'encrassement."
+      ]
+    },
+    "P0606": {
+      "title": "Calculateur moteur : défaut du processeur",
+      "description": "Le calculateur moteur a détecté une erreur interne. Parfois résolu par une mise à jour logicielle, parfois le calculateur est défectueux.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Défaut interne du calculateur", "likelihood": "medium" },
+        { "text": "Alimentation ou masse du calculateur défectueuse", "likelihood": "medium" },
+        { "text": "Logiciel à mettre à jour", "likelihood": "low" }
+      ],
+      "checks": ["Vérifie l'état de la batterie et des masses avant d'incriminer le calculateur."]
+    },
+    "U0100": {
+      "title": "Perte de communication avec le calculateur moteur (ECM/PCM)",
+      "description": "Un calculateur ne reçoit plus les messages du calculateur moteur sur le réseau CAN. Selon la cause, le moteur peut ne pas démarrer ou plusieurs voyants peuvent s'allumer.",
+      "urgency": "soon",
+      "causes": [
+        { "text": "Batterie faible ou coupure d'alimentation du calculateur moteur", "likelihood": "high" },
+        { "text": "Connecteur ou câblage du réseau CAN défectueux", "likelihood": "medium" },
+        { "text": "Calculateur moteur défectueux", "likelihood": "low" }
+      ],
+      "checks": ["Contrôle la tension batterie et les fusibles du calculateur moteur.", "Ce code apparaît souvent après une batterie à plat : efface et vérifie s'il revient."]
+    },
+    "P0520": {
+      "title": "Capteur/contact de pression d'huile moteur : circuit",
+      "description": "Défaut sur le circuit du capteur ou du contact de pression d'huile. Le calculateur ne peut plus surveiller la pression d'huile.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Capteur ou contact de pression d'huile défectueux", "likelihood": "high" },
+        { "text": "Câblage ou connecteur défectueux", "likelihood": "medium" },
+        { "text": "Pression d'huile réellement insuffisante", "likelihood": "low" }
+      ],
+      "checks": [
+        "Arrête-toi et contrôle immédiatement le niveau d'huile.",
+        "Si le voyant de pression d'huile est allumé, ne roule pas : le moteur peut casser en quelques minutes.",
+        "Seul un contrôle avec un manomètre confirme la vraie pression."
+      ]
+    },
+    "P0524": {
+      "title": "Pression d'huile moteur trop basse",
+      "description": "La pression d'huile mesurée est trop faible. Sans pression d'huile, le moteur peut casser très rapidement.",
+      "urgency": "stop",
+      "causes": [
+        { "text": "Niveau d'huile trop bas", "likelihood": "high" },
+        { "text": "Pompe à huile ou crépine obstruée", "likelihood": "medium" },
+        { "text": "Huile inadaptée ou trop usée", "likelihood": "medium" },
+        { "text": "Capteur de pression défectueux", "likelihood": "medium" }
+      ],
+      "checks": ["Arrête le moteur et contrôle le niveau d'huile tout de suite.", "Ne redémarre pas si le niveau est correct et le voyant reste allumé : fais remorquer."]
+    }
+  }
+}

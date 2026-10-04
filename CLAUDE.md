@@ -138,6 +138,7 @@ ISO 9141-2, SAE J1850 PWM/VPW.
 | `npm run lint` | ESLint |
 | `npm test` / `npm run test:watch` / `npm run coverage` | Vitest |
 | `npm run build` / `npm run preview` | Build de production / aperçu |
+| `npm run db:fetch` / `npm run db:build` | Télécharger OBDex / générer la base de codes (`public/dtc/`) — à lancer une fois avant `dev` |
 
 Avant chaque commit : `npm run check && npm run lint && npm test`.
 
@@ -159,12 +160,15 @@ src/
   vin/              # Décodage VIN (WMI → marque/pays, année modèle)
   dtc-db/           # Base de codes (JSON) + recherche (constructeur d'abord, générique ensuite)
   storage/          # IndexedDB : véhicules, scans, historique, enregistrements, export/import
+                    # (phase 1 : pre-clear.ts, sauvegarde localStorage avant effacement)
   report/           # Génération du rapport garagiste (HTML imprimable, texte)
   simulator/        # Scénarios de voitures simulées pour MockTransport
   platform/         # Détection des capacités du navigateur (Web Bluetooth, Web Serial, iOS/Bluefy)
   ui/               # Composants Svelte, écrans (§8). Aucune logique protocole ici.
     components/     # Composants de base (Button, Card, Alert, SeverityBadge, ConfirmDialog, Spinner)
     screens/        # Un fichier par écran ; « Composants » = guide visuel de tous les états
+    session.svelte.ts  # Seul point d'entrée de l'UI vers le dongle : connexion, scan, effacement
+data/dtc/fr/        # Traductions et fiches rédigées (voir §7.4)
 data/
   dtc/              # Sources de la base de codes (voir §7)
   pids/             # Définitions de PIDs génériques et personnalisés
@@ -318,7 +322,20 @@ interface ManufacturerPlugin {
 | `monitor` | 🟡 À surveiller | Pas d'urgence, peut s'aggraver |
 | `info` | ⚪ Information | Code informatif ou historique |
 
-### 7.4 Recherche
+### 7.4 Construction de la base (état réel)
+- `npm run db:fetch` télécharge OBDex au commit figé dans `data/dtc/source/SOURCE_VERSION` (YAML non versionnés).
+- `npm run db:build` (`scripts/build-dtc-db.mjs`) produit `public/dtc/<préfixe 3 caractères>.json` + `index.json`
+  (générés, non versionnés ; la CI les reconstruit avant chaque déploiement).
+- Traductions versionnées dans `data/dtc/fr/` :
+  - `curated.json` : fiches complètes rédigées à la main (titre, description, gravité, causes, vérifications) — priment sur tout ;
+  - `symptoms.json`, `causes.json` : correspondances EN → FR ;
+  - titres : traducteur structuré `scripts/lib/title-fr.mjs` + vocabulaire `title-fr-units.mjs` (genre marqué `f:`).
+    **Un mot inconnu → titre laissé en anglais.** Ne jamais ajouter de règle qui devine.
+- Gravité des codes sans fiche : règles `scripts/lib/urgency.mjs` (testées).
+- Chaque champ texte porte sa langue (`lang: 'fr' | 'en'`) ; l'UI marque l'anglais « EN » et affiche toujours l'intitulé SAE d'origine.
+- Ajouter/corriger une fiche : éditer `curated.json`, relancer `npm run db:build`. Le build échoue si le code n'existe pas dans OBDex.
+
+### 7.5 Recherche
 **Plugin constructeur d'abord, générique ensuite.** Un code inconnu s'affiche quand même :
 « Code spécifique constructeur, non documenté », avec le code brut, l'ECU et le statut.
 

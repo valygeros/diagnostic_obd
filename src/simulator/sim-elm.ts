@@ -55,7 +55,8 @@ export class SimulatedElm implements Responder {
   delayFor(command: string): number {
     const cmd = command.replace(/\s/g, '').toUpperCase()
     if (cmd === 'ATZ') return 300
-    if (!cmd.startsWith('AT') && !this.found && this.settings.protocol === '0') {
+    const isObd = /^[0-9A-F]+$/.test(cmd)
+    if (isObd && !this.found && this.settings.protocol === '0') {
       return this.scenario.behaviour?.searchDelayMs ?? 800
     }
     return 0

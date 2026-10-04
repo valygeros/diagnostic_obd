@@ -14,7 +14,7 @@ ou marqué explicitement « non testé sur véhicule ».
 | Phase | Objectif | Statut |
 |---|---|---|
 | 0 | Préparation (projet, outils, matériel, déploiement) | 🟡 Presque fini — reste : dongle, Bluefy, test sur iPhone |
-| 1 | MVP générique : connexion, scan, codes en français, effacement, mode démo | ⬜ À faire |
+| 1 | MVP générique : connexion, scan, codes en français, effacement, mode démo | 🟡 Fait en démo — reste : essais avec le vrai dongle, suite de la traduction |
 | 2 | Données en direct, freeze frame, contrôle technique, Mode 06, PWA hors ligne | ⬜ À faire |
 | 3 | Véhicules, historique, enregistrements, rapport garagiste, export/import | ⬜ À faire |
 | 4 | Plugins constructeur (VAG, Renault/Dacia, Stellantis…), PIDs personnalisés | ⬜ À faire |
@@ -69,118 +69,134 @@ Ordre conseillé : 0 → 1 → 2 → 3 → 4 → 6 → 5. Les phases 4 et 5 peuv
 
 ## Phase 1 — MVP générique
 
+> État au 2026-10-04 : tout fonctionne en **mode démo** (7 voitures simulées, 205 tests automatiques).
+> Reste : les **essais avec le vrai dongle** (1.11) et la suite de la traduction (1.8).
+
 ### 1.1 Transport — interface et simulateur de base
-- [ ] Type `Transport` : `connect`, `write`, `onData`, `onDisconnect`, `disconnect`, état de connexion
-- [ ] `MockTransport` : relie l'ELM simulé au reste de l'application, latence réglable
-- [ ] **Journal brut** : enregistrement en mémoire de chaque trame envoyée/reçue (horodatage, sens, texte)
-- [ ] Taille maximale du journal (tampon circulaire) pour ne pas saturer la mémoire
-- [ ] Tests unitaires du journal
+- [x] Type `Transport` : `connect`, `write`, `onData`, `onDisconnect`, `disconnect`, état de connexion (`src/transport/types.ts`)
+- [x] `MockTransport` : relie l'ELM simulé au reste de l'application, latence et découpage des paquets réglables
+- [x] **Journal brut** : chaque trame envoyée/reçue, horodatée, avec le sens (`src/transport/raw-log.ts`)
+- [x] Taille maximale du journal (5 000 lignes, les plus anciennes sont supprimées)
+- [x] Tests unitaires du journal (+ masquage du VIN à l'export, en texte et en hexadécimal)
 
 ### 1.2 Transport — Bluetooth Low Energy
-- [ ] `ble-profiles.ts` : profils `FFF0`, `FFE0`, `18F0`, Nordic UART (service, notify, write)
-- [ ] `requestDevice` avec `acceptAllDevices` + tous les `optionalServices` (ou filtres par nom si plus fiable)
-- [ ] Découverte des services → sélection du premier profil qui correspond
-- [ ] Aucun profil trouvé → journaliser services et caractéristiques + message clair
-- [ ] Écriture découpée en paquets ≤ 20 octets, avec `\r` final
-- [ ] Choix `writeValueWithoutResponse` / `writeValueWithResponse` selon les propriétés de la caractéristique
-- [ ] Réassemblage des notifications (texte ASCII)
-- [ ] Gestion de `gattserverdisconnected` : état visible, une tentative de reconnexion automatique, puis bouton manuel
-- [ ] Détection de l'absence de `navigator.bluetooth` (+ détection iOS hors Bluefy)
-- [ ] Gestion des erreurs : utilisateur qui annule, Bluetooth désactivé, permission refusée, appareil déjà connecté ailleurs
-- [ ] Test manuel avec le vrai dongle sur PC (Chrome) puis iPhone (Bluefy)
+- [x] `ble-profiles.ts` : profils `FFF0`, `FFE0`, `18F0`, Nordic UART (service, notify, write)
+- [x] `requestDevice` avec `acceptAllDevices` + tous les `optionalServices`
+- [x] Découverte des services → sélection du premier profil qui correspond
+- [x] Aucun profil trouvé → journaliser services et caractéristiques + message clair
+- [x] Écriture découpée en paquets ≤ 20 octets, avec `\r` final, écritures sérialisées
+- [x] Écriture avec accusé quand possible, sinon sans ; repli sur `writeValue()` pour les navigateurs iOS anciens
+- [x] Réassemblage des notifications (texte ASCII)
+- [~] Gestion de `gattserverdisconnected` : état visible + bouton « Se reconnecter » (sans sélecteur) ;
+      la tentative **automatique** n'est pas faite (à décider après les essais réels)
+- [x] Détection de l'absence de `navigator.bluetooth` (+ détection iOS hors Bluefy) (`src/platform/support.ts`)
+- [x] Gestion des erreurs : sélecteur annulé, connexion GATT impossible (dongle déjà pris), profil inconnu
+- [x] Tests unitaires avec une fausse API Web Bluetooth (`ble-transport.test.ts`)
+- [ ] Test manuel avec le vrai dongle sur PC (Chrome) puis iPhone (Bluefy) → 1.11
 
 ### 1.3 ELM327 — cœur
-- [ ] File d'attente : **une commande à la fois**, fin de réponse sur `>`
-- [ ] Timeouts par commande (normal / long pour la première requête OBD / personnalisable)
-- [ ] Nettoyage des réponses : échos, espaces, `\r\n`, lignes vides, minuscules, octets nuls
-- [ ] Reconnaissance des réponses spéciales : `OK`, `?`, `NO DATA`, `SEARCHING...`, `UNABLE TO CONNECT`,
-      `BUS INIT: ...ERROR`, `CAN ERROR`, `STOPPED`, `BUFFER FULL`, `ERR94`, `LV RESET`
-- [ ] Table des messages d'erreur en français + piste de résolution pour chacun
-- [ ] Séquence d'init : `ATZ` → `ATE0` → `ATL0` → `ATS0` → `ATH1` → `ATAT1` → `ATSP0` → `0100`
-- [ ] Tolérance aux clones : commande AT non supportée (`?`) → on continue si elle n'est pas indispensable
-- [ ] Lecture `ATDPN` (protocole), `ATRV` (tension batterie), `ATI` / `STI` (identité du dongle)
-- [ ] Table des protocoles ELM (numéro → nom lisible)
-- [ ] Parsing des réponses avec en-têtes : regroupement **par ECU** (CAN 11 bits, CAN 29 bits, anciens protocoles)
-- [ ] Annulation propre d'une commande en cours (déconnexion, changement d'écran)
-- [ ] Tests unitaires : chaque type de réponse, réponses fragmentées, réponses de clones
+- [x] File d'attente : **une commande à la fois**, fin de réponse sur `>` (`src/elm327/client.ts`)
+- [x] Timeouts par commande (2,5 s ; 20 s pour la recherche de protocole ; 5 s pour `ATZ`)
+- [x] Après un timeout : resynchronisation (retour chariot seul, attente du `>`) avant la commande suivante
+- [x] Nettoyage des réponses : échos, espaces, `\r\n`, lignes vides, minuscules, octets nuls, `SEARCHING...` collé aux données
+- [x] Reconnaissance des réponses spéciales : `OK`, `?`, `NO DATA`, `SEARCHING...`, `UNABLE TO CONNECT`,
+      `BUS INIT: ...ERROR`, `CAN ERROR`, `STOPPED`, `BUFFER FULL`, `ERRxx`, `LV RESET`… (`src/elm327/response.ts`)
+- [x] Table des messages d'erreur en français + piste de résolution pour chacun
+- [x] Séquence d'init : `ATZ` → `ATE0` → `ATL0` → `ATS0` → `ATH1` → `ATAT1` → `ATSP0` → `0100`
+- [x] Tolérance aux clones : réglage refusé (`?`) → on continue, sauf `ATE0`/`ATSP` (indispensables) ; liste des refus affichée
+- [x] Lecture `ATDPN` (protocole), `ATRV` (tension batterie), `ATI` / `STI` (identité du dongle)
+- [x] Table des protocoles ELM (numéro → nom lisible) (`src/elm327/protocols.ts`)
+- [x] Parsing des réponses avec en-têtes : regroupement **par ECU** (CAN 11 bits, CAN 29 bits, ISO 9141, KWP) (`src/elm327/frames.ts`)
+- [~] Annulation : une déconnexion fait échouer proprement la commande en cours ; pas d'annulation au changement d'écran (inutile pour l'instant)
+- [x] Tests unitaires : chaque type de réponse, réponses fragmentées, réponses de clones
 
 ### 1.4 ISO-TP (multi-trames)
-- [ ] Réassemblage des trames First Frame / Consecutive Frames quand les en-têtes sont activés
-- [ ] Gestion du format de réponse multi-lignes ELM (`0: …`, `1: …`) sans en-têtes
-- [ ] Tests unitaires avec réponses VIN réelles/réalistes
+- [x] Réassemblage First Frame / Consecutive Frames, y compris entrelacés entre deux ECU (`src/isotp/reassembler.ts`)
+- [x] Trame manquante ou réponse incomplète → erreur explicite (jamais de données tronquées en silence)
+- [x] Format multi-lignes ELM (`014` / `0: …` / `1: …`) sans en-têtes
+- [x] Tests unitaires avec réponses VIN réalistes
 
 ### 1.5 Filtre de sécurité (CLAUDE.md §9.1)
-- [ ] Liste blanche des services autorisés (OBD 01/02/03/04/06/07/09/0A ; UDS 0x10 sessions 01/03, 0x14, 0x19, 0x22, 0x3E ; KWP lecture)
-- [ ] Liste noire explicite des services interdits (0x10 programmation, 0x11, 0x23, 0x27, 0x28, 0x2E, 0x2F, 0x31, 0x34–0x37, 0x3D, 0x85 + KWP)
-- [ ] Filtre appliqué **dans la couche protocole**, avant l'envoi au transport, pour toutes les commandes
-- [ ] Commandes AT : liste blanche également (pas de commandes d'écriture de paramètres persistants du dongle sans raison)
-- [ ] Effacement (04 / 0x14) : n'accepte que si un jeton de confirmation utilisateur est fourni
-- [ ] Tests de non-régression : chaque service interdit est refusé, chaque service autorisé passe
+- [x] Liste blanche des services autorisés (OBD 01/02/03/06/07/09/0A ; UDS 0x10 sessions 01/03 et KWP 81, 0x19, 0x22, 0x3E ; KWP lecture 13/17/18/1A/21) (`src/elm327/safety.ts`)
+- [x] Tout le reste est refusé par défaut (dont 0x10 programmation, 0x11, 0x23, 0x27, 0x28, 0x2E, 0x2F, 0x30, 0x31, 0x34–0x37, 0x3B, 0x3D, 0x85, OBD 08)
+- [x] Filtre appliqué **dans la couche protocole**, avant l'envoi au transport, pour toutes les commandes
+- [x] Commandes AT et STN : liste blanche (refus de `ATPP`, `ATSD`, `AT@3`, `ATBRD`…)
+- [x] Effacement (04 / 0x14) : uniquement avec une autorisation à usage unique, valable 60 s, créée par la confirmation
+- [x] Tests de non-régression : chaque service interdit est refusé, chaque service autorisé passe
 
 ### 1.6 OBD-II — services de base
-- [ ] Lecture des PIDs supportés (`0100`, `0120`, `0140`… tant que le bit suivant est à 1), par ECU
-- [ ] PID `0101` : voyant moteur (MIL), nombre de codes, type d'allumage, état des moniteurs (décodé)
-- [ ] Service 03 : codes confirmés, par ECU
-- [ ] Service 07 : codes en attente, par ECU
-- [ ] Service 0A : codes permanents, par ECU
-- [ ] Décodage DTC (2 octets → P/C/B/U + 4 caractères), ignorer les `0000` de remplissage
-- [ ] Gestion des différences CAN / non-CAN (octet de nombre de codes en CAN)
-- [ ] Service 04 : effacement (passe par le filtre et la confirmation)
-- [ ] Service 09 : VIN (`0902`), nom de l'ECU (`090A`) si supporté
-- [ ] Modèle de données `Dtc` : code, ECU, type (confirmé/en attente/permanent), source
-- [ ] Tests unitaires pour chaque service avec trames réalistes (CAN et non-CAN)
+- [x] Lecture des PIDs supportés (`0100`, `0120`, `0140`… tant que le bit suivant est à 1), par ECU (`src/obd/client.ts`)
+- [~] PID `0101` : voyant moteur (MIL), nombre de codes, type d'allumage ; les moniteurs sont gardés bruts (décodage en 2.6)
+- [x] Service 03 : codes confirmés, par ECU
+- [x] Service 07 : codes en attente, par ECU
+- [x] Service 0A : codes permanents, par ECU
+- [x] Décodage DTC (2 octets → P/C/B/U + 4 caractères), `0000` de remplissage ignorés (`src/obd/dtc.ts`)
+- [x] Différences CAN / non-CAN (octet de nombre de codes en CAN)
+- [x] Service 04 : effacement (passe par le filtre et la confirmation)
+- [x] Service 09 : VIN (`0902`, CAN et ancien format en 5 messages), nom de l'ECU (`090A`)
+- [x] Réponses négatives (`7F`) traduites en français
+- [x] Scan complet par étapes ; une étape en échec n'arrête pas le scan, sauf perte de liaison (`src/obd/scan.ts`)
+- [x] Tests unitaires et d'intégration (CAN et non-CAN)
 
 ### 1.7 VIN
-- [ ] Validation (17 caractères, pas de I/O/Q, chiffre de contrôle pour les VIN nord-américains)
-- [ ] Table WMI → constructeur / pays (données déclaratives)
-- [ ] 10ᵉ caractère → année modèle (cycle de 30 ans, levée d'ambiguïté)
-- [ ] VIN absent/illisible → saisie manuelle ou nom libre
-- [ ] Tests unitaires avec VIN de plusieurs marques
+- [x] Validation (17 caractères, pas de I/O/Q, chiffre de contrôle pour les VIN nord-américains) (`src/vin/vin.ts`)
+- [x] Table WMI → constructeur / groupe (VAG, Renault, Stellantis, Toyota…) (`src/vin/wmi.ts`)
+- [x] Pays d'après le 1er caractère
+- [x] 10ᵉ caractère → années modèle possibles + année la plus probable
+- [-] VIN absent/illisible → saisie manuelle ou nom libre : **déplacé en 3.2** (avec la gestion des véhicules)
+- [x] Tests unitaires avec VIN de plusieurs marques
 
 ### 1.8 Base de codes défaut
-- [ ] Récupérer OBDex (données CC0) dans `data/dtc/source/` avec sa version et la date
-- [ ] Script `scripts/` : conversion OBDex → notre format (CLAUDE.md §7.2)
-- [ ] Correspondance des niveaux de gravité OBDex → `stop` / `soon` / `monitor` / `info`, avec règles documentées
-- [ ] **Traduction en français** : titre, description, symptômes, causes, vérifications
-  - [ ] Stratégie de traduction choisie et documentée (script + relecture)
-  - [ ] Glossaire technique FR (sonde lambda, papillon, débitmètre, catalyseur, vanne EGR, FAP…)
-  - [ ] Relecture prioritaire des ~200 codes les plus courants (P0100–P0499, P0500–P0799…)
-  - [ ] Relecture du reste par familles
-- [ ] Script de validation : schéma JSON, doublons, champs vides, gravité présente, sources présentes
-- [ ] Découpage/compression pour un chargement léger (chargement à la demande par famille)
-- [ ] Module de recherche : plugin constructeur d'abord, générique ensuite, « code non documenté » sinon
-- [ ] Description générique de repli selon la structure du code (lettre + 1er chiffre = générique/constructeur, 2ᵉ chiffre = sous-système)
-- [ ] Tests unitaires de la recherche
+- [x] Récupérer OBDex (CC0) à un commit figé : `npm run db:fetch` (`data/dtc/source/SOURCE_VERSION`)
+- [x] Script de construction : `npm run db:build` → `public/dtc/<préfixe>.json` + `index.json` (`scripts/build-dtc-db.mjs`)
+- [x] Gravité : OBDex n'en a pas → règles documentées et testées (`scripts/lib/urgency.mjs`) ; les fiches rédigées priment
+- [x] **Traduction en français** — stratégie :
+  - [x] Titres : traducteur structuré (composant + état + emplacement, accords en genre) ; mot inconnu → titre laissé en anglais, jamais deviné (`scripts/lib/title-fr.mjs`) — **57,6 %** des titres
+  - [x] Glossaire technique FR (~430 termes : sonde lambda, papillon, débitmètre, catalyseur, EGR, FAP, AdBlue…) (`scripts/lib/title-fr-units.mjs`)
+  - [x] Symptômes : **100 %** traduits à la main (`data/dtc/fr/symptoms.json`)
+  - [x] Causes : les ~200 plus fréquentes traduites à la main → **67,4 %** des occurrences (`data/dtc/fr/causes.json`)
+  - [x] **52 fiches complètes** rédigées pour les codes les plus courants (ratés, richesse, catalyseur, EVAP, sondes, EGR, FAP, turbo, distribution, huile, batterie…) (`data/dtc/fr/curated.json`)
+  - [~] Descriptions : seulement les 52 fiches (0,5 %) ; le reste s'affiche en anglais avec la mention **EN**
+  - [ ] Monter à ~200 fiches complètes (P0100–P0799 en priorité)
+  - [ ] Traduire le reste des titres, causes et descriptions (voir « Décisions prises » / à prendre)
+- [~] Validation : le build échoue si une fiche rédigée ne correspond à aucun code ; pas encore de validation de schéma complète
+- [x] Découpage en 62 fichiers (≈ 20 Ko compressés chacun), chargés à la demande et mis en cache
+- [x] Recherche : générique, puis « code non documenté » honnête (le plugin constructeur viendra en phase 4) (`src/dtc-db/lookup.ts`)
+- [x] Description de repli selon la structure du code (système + générique/constructeur)
+- [x] Toujours affichés : l'intitulé normalisé d'origine (SAE), et si le titre/la gravité sont automatiques
+- [x] Tests unitaires de la recherche (dont hors ligne puis retour en ligne) et du traducteur
 
 ### 1.9 Simulateur — scénarios MVP
-- [ ] Moteur de simulation : dictionnaire requête → réponse, multi-ECU, état (codes effacés après `04`)
-- [ ] Émulation des commandes AT de base (`ATZ`, `ATE0`, `ATSP0`, `ATDPN`, `ATRV`, `ATI`…)
-- [ ] Scénario « voiture CAN saine »
-- [ ] Scénario « codes confirmés + en attente + permanents » (plusieurs ECU)
-- [ ] Scénario « vieille voiture KWP / ISO 9141 »
-- [ ] Scénario « VIN multi-trames »
-- [ ] Scénario « clone ELM327 qui répond mal »
-- [ ] Scénario « voiture qui ne répond pas » (`UNABLE TO CONNECT`)
-- [ ] Scénario « déconnexion en plein scan »
-- [ ] Tests d'intégration : scan complet bout à bout sur chaque scénario
+- [x] Moteur de simulation : ELM327 simulé complet (écho, espaces, en-têtes, SEARCHING, ISO-TP, sommes de contrôle), multi-ECU, état (codes effacés après `04`, permanents conservés) (`src/simulator/sim-elm.ts`)
+- [x] Émulation des commandes AT de base (`ATZ`, `ATE0`, `ATSP0`, `ATDPN`, `ATRV`, `ATI`…)
+- [x] Scénario « voiture CAN saine »
+- [x] Scénario « codes confirmés + en attente + permanents » (moteur + boîte)
+- [x] Scénarios « vieille voiture ISO 9141 » et « diesel KWP »
+- [x] VIN multi-trames (CAN) et en 5 messages (ISO 9141)
+- [x] Scénario « clone ELM327 qui répond mal » (écho permanent, minuscules, refus de `ATH1`/`ATAT1`)
+- [x] Scénario « contact coupé » (`UNABLE TO CONNECT`)
+- [x] Scénario « coupure Bluetooth en plein scan »
+- [x] Tests d'intégration : scan complet bout à bout sur chaque scénario + un test avec les vrais délais
 
 ### 1.10 Interface MVP
-- [ ] **Écran « navigateur non compatible »** : explication + marche à suivre Bluefy + accès au mode démo
-- [ ] **Accueil / Connexion** : bouton « Connecter le dongle », bouton « Mode démo »,
-      état (dongle, protocole, tension batterie, VIN/marque)
-- [ ] **Diagnostic de connexion guidé** en cas d'échec (contact mis ? dongle BLE ? bon navigateur ? autre appareil connecté ?)
-- [ ] **Scan complet** : progression étape par étape, puis résumé (« X défauts dont Y urgents · voyant · … »)
-- [ ] Liste des défauts **groupée par calculateur**, avec calculateurs sans défaut et calculateurs muets distingués
-- [ ] **Fiche d'un code** : code, titre, badge de gravité, statut, ECU, description, symptômes, causes triées, vérifications
-- [ ] **Parcours d'effacement** (CLAUDE.md §9.2) :
-  - [ ] Rappel des prérequis (moteur coupé, contact mis)
-  - [ ] Sauvegarde automatique des codes (et freeze frame dès la phase 2) avant effacement
-  - [ ] Avertissements (freeze frame perdu, moniteurs CT remis à zéro, défaut qui reviendra, codes non effaçables)
-  - [ ] Confirmation explicite
-  - [ ] Rescan automatique et affichage du résultat
-- [ ] Indicateur permanent de l'état de connexion + bouton de déconnexion
-- [ ] Badge « MODE DÉMO » toujours visible en mode simulateur
-- [ ] **Réglages (version minimale)** : journal brut (afficher, copier, exporter en fichier texte)
+- [x] **Navigateur non compatible** : message adapté (iPhone → Bluefy, HTTP, autre navigateur) ; le mode démo reste accessible
+- [x] **Accueil / Connexion** : « Connecter le dongle », « Mode démo » (choix de la voiture simulée),
+      étapes de connexion, puis dongle, protocole, tension batterie avec interprétation
+- [x] **Diagnostic de connexion guidé** en cas d'échec, adapté à l'étape qui a échoué, avec « Réessayer »
+- [x] **Scan complet** : progression étape par étape, puis résumé (« 5 défauts dont 1 urgent · Voyant moteur allumé »), VIN et constructeur
+- [x] Défauts **groupés par calculateur**, triés par gravité ; calculateurs sans défaut indiqués
+      (les calculateurs muets ne sont détectables qu'avec les modules constructeur → phase 4)
+- [x] **Fiche d'un code** : gravité, statut expliqué, calculateur, description, symptômes, causes triées, vérifications, coût indicatif, codes liés, sources ; textes en anglais marqués **EN**
+- [x] **Parcours d'effacement** (CLAUDE.md §9.2) :
+  - [x] Case obligatoire « moteur coupé, contact mis »
+  - [x] Sauvegarde automatique du diagnostic avant effacement (10 dernières, visibles dans Réglages) ; freeze frame en phase 2
+  - [x] Avertissements (freeze frame perdu, moniteurs CT remis à zéro, défaut qui reviendra, codes non effaçables)
+  - [x] Bouton masqué s'il n'y a que des codes permanents (ineffaçables)
+  - [x] Relecture automatique et message de résultat
+- [x] Indicateur permanent de l'état de connexion + bouton de déconnexion
+- [x] Bandeau « MODE DÉMO » toujours visible en mode simulateur
+- [x] **Réglages** : thème, journal brut (afficher, copier, télécharger, vider), sauvegardes avant effacement, état de la traduction
+- [x] Barre de navigation en bas (Accueil / Diagnostic / Réglages)
 
 ### 1.11 Essais réels
 - [ ] Connexion du dongle sur PC (Chrome) : init OK, protocole détecté
@@ -192,6 +208,7 @@ Ordre conseillé : 0 → 1 → 2 → 3 → 4 → 6 → 5. Les phases 4 et 5 peuv
 
 **Critère de fin** : depuis l'iPhone dans Bluefy, on connecte le dongle, on lance un scan, on lit les codes
 expliqués en français, on peut les effacer en toute sécurité ; tout marche aussi en mode démo.
+→ **Mode démo : atteint.** Vrai dongle : en attente du matériel.
 
 ---
 
@@ -538,6 +555,9 @@ _(à remplir au fil des essais)_
 | 2026-10-04 | Universel, pas centré sur un véhicule | Fonctionner sur le maximum de voitures |
 | 2026-10-04 | Lecture seule (sauf effacement des codes) | Sécurité : aucun risque d'immobiliser une voiture |
 | 2026-10-04 | Base générique issue d'OBDex (CC0) traduite en FR | Seule base complète sous licence libre |
+| 2026-10-04 | Textes non traduits affichés en anglais avec la mention « EN », jamais devinés | Honnêteté (CLAUDE.md §9.5) : mieux vaut un texte anglais juste qu'un français faux |
+| 2026-10-04 | Gravité calculée par règles pour les codes sans fiche ; un code inconnu compte comme « À faire vite » | OBDex n'a pas de gravité ; on ne rassure pas sans savoir |
+| 2026-10-04 | Base de codes générée en CI (`db:fetch` + `db:build`), pas versionnée | 11 Mo de fichiers générés ; seules les traductions sont dans le dépôt |
 | 2026-10-04 | Hébergement GitHub Pages, dépôt public | Gratuit, déploiement automatique ; le code ne contient aucune donnée personnelle |
 | 2026-10-04 | Style visuel « atelier » : contraste fort, jaune signalisation, polices embarquées | Lisible en plein soleil, fonctionne hors ligne |
 | 2026-10-04 | Reprise des fonctions de lecture des tablettes pro ; exclusion des remises à zéro, tests actionneurs et codage | Tout ce qui lit est utile et sans risque ; tout ce qui écrit peut immobiliser la voiture |
