@@ -13,7 +13,7 @@ ou marqué explicitement « non testé sur véhicule ».
 
 | Phase | Objectif | Statut |
 |---|---|---|
-| 0 | Préparation (projet, outils, matériel, déploiement) | 🟡 En cours — reste : matériel, hébergement |
+| 0 | Préparation (projet, outils, matériel, déploiement) | 🟡 Presque fini — reste : dongle, Bluefy, test sur iPhone |
 | 1 | MVP générique : connexion, scan, codes en français, effacement, mode démo | ⬜ À faire |
 | 2 | Données en direct, freeze frame, contrôle technique, Mode 06, PWA hors ligne | ⬜ À faire |
 | 3 | Véhicules, historique, enregistrements, rapport garagiste, export/import | ⬜ À faire |
@@ -48,10 +48,12 @@ Ordre conseillé : 0 → 1 → 2 → 3 → 4 → 6 → 5. Les phases 4 et 5 peuv
       reste à vérifier que Bluefy accepte le certificat. Sinon : tester via les préversions déployées (0.4)
 
 ### 0.4 Hébergement et déploiement
-- [ ] Choisir l'hébergeur statique (GitHub Pages / Netlify / Cloudflare Pages)
-- [ ] Dépôt distant (privé si souhaité)
-- [ ] Déploiement automatique sur push (`main` → production)
-- [ ] Site accessible en HTTPS, page « Hello » ouverte avec succès dans Bluefy
+- [x] Choisir l'hébergeur statique → **GitHub Pages**
+- [x] Dépôt distant : https://github.com/valygeros/diagnostic_obd (public)
+- [x] Déploiement automatique sur push (`main` → production) : `.github/workflows/deploy.yml`
+      (vérifie types, lint et tests avant de publier)
+- [x] Site accessible en HTTPS : https://valygeros.github.io/diagnostic_obd/
+- [ ] Page ouverte avec succès dans **Bluefy** sur l'iPhone (à faire par l'utilisateur)
 
 ### 0.5 Bases de l'interface
 - [x] Design tokens : couleurs (clair/sombre), couleurs de gravité (§7.3), typographie, espacements (`src/app.css`)
@@ -536,4 +538,6 @@ _(à remplir au fil des essais)_
 | 2026-10-04 | Universel, pas centré sur un véhicule | Fonctionner sur le maximum de voitures |
 | 2026-10-04 | Lecture seule (sauf effacement des codes) | Sécurité : aucun risque d'immobiliser une voiture |
 | 2026-10-04 | Base générique issue d'OBDex (CC0) traduite en FR | Seule base complète sous licence libre |
+| 2026-10-04 | Hébergement GitHub Pages, dépôt public | Gratuit, déploiement automatique ; le code ne contient aucune donnée personnelle |
+| 2026-10-04 | Style visuel « atelier » : contraste fort, jaune signalisation, polices embarquées | Lisible en plein soleil, fonctionne hors ligne |
 | 2026-10-04 | Reprise des fonctions de lecture des tablettes pro ; exclusion des remises à zéro, tests actionneurs et codage | Tout ce qui lit est utile et sans risque ; tout ce qui écrit peut immobiliser la voiture |
